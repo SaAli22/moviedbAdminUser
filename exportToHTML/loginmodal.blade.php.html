@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>loginmodal.blade.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d5b778;}
+.s1 { color: #bababa;}
+.s2 { color: #6aab73;}
+.s3 { color: #bcbec4;}
+.s4 { color: #56a8f5;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+loginmodal.blade.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;div </span><span class="s1">id</span><span class="s2">=&quot;myModal&quot; </span><span class="s1">class</span><span class="s2">=&quot;modal&quot;</span><span class="s0">&gt;</span>
+
+    <span class="s0">&lt;div </span><span class="s1">class</span><span class="s2">=&quot;modal-content&quot;</span><span class="s0">&gt;</span>
+        <span class="s0">&lt;span </span><span class="s1">class</span><span class="s2">=&quot;close&quot;</span><span class="s0">&gt;</span><span class="s4">&amp;times;</span><span class="s0">&lt;/span&gt;</span>
+        <span class="s0">&lt;p&gt;</span><span class="s3">Some text in the Modal..</span><span class="s0">&lt;/p&gt;</span>
+    <span class="s0">&lt;/div&gt;</span>
+
+<span class="s0">&lt;/div&gt;</span>
+<span class="s0">&lt;script&gt;</span>
+    <span class="s3">document.querySelector(</span><span class="s2">'.close'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">document.querySelector(</span><span class="s2">'.modal'</span><span class="s3">).style.visibility = </span><span class="s2">&quot;hidden&quot;</span><span class="s3">;</span>
+    <span class="s3">})</span>
+<span class="s0">&lt;/script&gt;</span>
+<span class="s0">&lt;style&gt;</span>
+    <span class="s3">.</span><span class="s0">modal </span><span class="s3">{</span>
+        <span class="s1">position</span><span class="s3">: </span><span class="s2">fixed</span><span class="s3">;</span>
+        <span class="s1">z-index</span><span class="s3">: </span><span class="s5">1</span><span class="s3">;</span>
+        <span class="s1">left</span><span class="s3">: </span><span class="s5">0</span><span class="s3">;</span>
+        <span class="s1">top</span><span class="s3">: </span><span class="s5">0</span><span class="s3">;</span>
+        <span class="s1">width</span><span class="s3">: </span><span class="s5">100</span><span class="s3">%;</span>
+        <span class="s1">height</span><span class="s3">: </span><span class="s5">100</span><span class="s3">%;</span>
+        <span class="s1">overflow</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+        <span class="s1">background-color</span><span class="s3">: </span><span class="s0">rgb</span><span class="s3">(</span><span class="s5">0</span><span class="s3">, </span><span class="s5">0</span><span class="s3">, </span><span class="s5">0</span><span class="s3">);</span>
+        <span class="s1">background-color</span><span class="s3">: </span><span class="s0">rgba</span><span class="s3">(</span><span class="s5">0</span><span class="s3">, </span><span class="s5">0</span><span class="s3">, </span><span class="s5">0</span><span class="s3">, </span><span class="s5">0.4</span><span class="s3">);</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">modal-content </span><span class="s3">{</span>
+        <span class="s1">position</span><span class="s3">: </span><span class="s2">fixed</span><span class="s3">;</span>
+        <span class="s1">left</span><span class="s3">: </span><span class="s5">0</span><span class="s3">;</span>
+        <span class="s1">bottom</span><span class="s3">: </span><span class="s5">0</span><span class="s3">;</span>
+        <span class="s1">top</span><span class="s3">: </span><span class="s5">0</span><span class="s3">;</span>
+        <span class="s1">right</span><span class="s3">: </span><span class="s5">0</span><span class="s3">;</span>
+        <span class="s1">background-color</span><span class="s3">: </span><span class="s4">#fefefe</span><span class="s3">;</span>
+        <span class="s1">margin</span><span class="s3">: </span><span class="s5">5</span><span class="s2">rem </span><span class="s5">15</span><span class="s2">rem </span><span class="s5">5</span><span class="s2">rem </span><span class="s5">15</span><span class="s2">rem</span><span class="s3">;</span>
+        <span class="s1">width</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+        <span class="s1">height</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+        <span class="s1">padding</span><span class="s3">: </span><span class="s5">20</span><span class="s2">px</span><span class="s3">;</span>
+        <span class="s1">border</span><span class="s3">: </span><span class="s5">1</span><span class="s2">px solid </span><span class="s4">#888</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">close </span><span class="s3">{</span>
+        <span class="s1">color</span><span class="s3">: </span><span class="s4">#aaa</span><span class="s3">;</span>
+        <span class="s1">float</span><span class="s3">: </span><span class="s2">right</span><span class="s3">;</span>
+        <span class="s1">font-size</span><span class="s3">: </span><span class="s5">28</span><span class="s2">px</span><span class="s3">;</span>
+        <span class="s1">font-weight</span><span class="s3">: </span><span class="s2">bold</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">close</span><span class="s3">:</span><span class="s0">hover</span><span class="s3">,</span>
+    <span class="s3">.</span><span class="s0">close</span><span class="s3">:</span><span class="s0">focus </span><span class="s3">{</span>
+        <span class="s1">color</span><span class="s3">: </span><span class="s2">black</span><span class="s3">;</span>
+        <span class="s1">text-decoration</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+        <span class="s1">cursor</span><span class="s3">: </span><span class="s2">pointer</span><span class="s3">;</span>
+    <span class="s3">}</span>
+<span class="s0">&lt;/style&gt;</span></pre>
+</body>
+</html>

@@ -7,7 +7,7 @@ use App\Models\Watchlist;
 
 class WatchlistController extends Controller
 {
-    function addToWatchlist(String $movie_id, string $user_id)
+    function addToWatchlist(string $movie_id, string $user_id )
     {
 
         $entity = new Watchlist();
@@ -15,6 +15,8 @@ class WatchlistController extends Controller
         $entity->user_id = $user_id;
 
         $entity->movie_id = $movie_id;
+
+
 
         $entity->save();
     }
