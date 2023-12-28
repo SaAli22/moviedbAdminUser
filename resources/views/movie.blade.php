@@ -10,11 +10,30 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<?php if (session()->has('user')) {
+<?php
+$user = null; // Define a default value for the $user variable
+if (session()->has('user')) {
     $user = session('user');
+}
+?>
+
+<?php if (session()->has('admin')) {
+    $admin = session('admin');
 } ?>
 
+
 <body>
+
+<?php
+// Check if admin session exists
+$isAdmin = false;
+if (session()->has('admin')) {
+    $isAdmin = true;
+}
+?>
+
+
+
     <script></script>
     @include('search')
     <div id="innerbody">
@@ -44,9 +63,28 @@
         </div>
         <div id="backdrop">
             <?php
-            print_r('<img src="https://image.tmdb.org/t/p/w500' . $data->poster_path . '"/>');
+            $posterPath = $data->poster_path;
+            if ($isAdmin) {
+                // Display an edit button for the admin to change the image
+                echo '<button onclick="editImage()">Edit Image</button>';
+
+
+            }
+
+            // Display the image with its current URL
+            echo '<img id="moviePoster" src="https://image.tmdb.org/t/p/w500' . $posterPath . '"/>';
             ?>
+            <?php
+// Check if admin or user session exists
+            $isAdmin = session()->has('admin');
+            $isUser = session()->has('user');
+            ?>
+
+
         </div>
+
+
+
         <div id="genres">
             @foreach ($data->genres as $e)
                 <button class='genrebuttons'>{{ $e->name }}</button>
@@ -54,10 +92,12 @@
         </div>
         <div class="title-div">
             <h2>Overview</h2>
+            <?php if ($isAdmin || $isUser): ?>
             <button id="watchlist-button">
                 <i class="fa-solid fa-plus plus"></i>
                 Add to watchlist
             </button>
+            <?php endif; ?>
         </div>
         <div id="overview">
             <?php
@@ -65,6 +105,10 @@
             ?>
 
         </div>
+
+        <?php if ($isAdmin): ?>
+        <button id="editOverviewButton">Edit Overview</button>
+        <?php endif; ?>
         <div>
             <h4 id="commentsheader">Reviews</h4>
             <div class=commentsForm>
@@ -73,14 +117,49 @@
                     <button class="commentButton" type="submit">Submit</button>
                 </form>
             </div>
-            <div id="comments">
 
-            </div>
 
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            <?php if ($isAdmin): ?>
+            // Click event for the 'Edit Overview' button
+            $('#editOverviewButton').on('click', function() {
+                var newOverviewText = prompt('Enter the new overview text:');
+                if (newOverviewText !== null && newOverviewText !== '') {
+                    $('#overview').html('<p>' + newOverviewText + '</p>');
+                }
+            });
+            <?php endif; ?>
+        });
+
+        function editImage() {
+            // Prompt the admin to input a new image URL or upload a new image
+
+            // Example: Prompt input for a new image URL
+            let newURL = prompt('Enter new image URL:');
+            if (newURL) {
+                // If a new URL is provided, update the image source (src)
+                document.getElementById('moviePoster').src = newURL;
+            }
+        }
+    </script>
+
+
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script>
+    async function getWatchlist(id) {
+        return fetch(`/api/getUserWatchlist/${id}`, {
+            method: "GET"
+        }).then(async (result) => {
+            return result.json();
+
+
+
+
     console.log(<?php echo $user; ?>);
     console.log("Hello");
     let comments = document.querySelector("#comments");
@@ -91,32 +170,33 @@
     let isAdded = false;
     let button = document.querySelector('#watchlist-button');
 
-    async function getWatchlist() {
-        //if is logged in
-        @if (session()->has('user'))
-            let a = await $.ajax({
-                url: `/api/getWatchlist/{{ $user->id }}/${window.location.pathname.substr(7)}`,
-                method: 'GET',
-            }).done((res) => {
-                //if current movie is watchlisted by current user
-                if (res.length > 0) {
-                    button.style = 'background-color: grey';
-                    button.innerHTML =
-                        '<i class="fa-solid fa-check plus"></i> Remove from watchlist';
-                    isAdded = true;
-                }
-                //if current movie is not watchlisted by current user
-                else {
-                    button.style = 'background-color: yellow';
-                    button.innerHTML =
-                        '<i class="fa-solid fa-plus plus"></i> Add to watchlist';
-                    isAdded = false;
-                }
-            })
-            //if not logged in
-        @else
-            document.querySelector('#watchlist-button').style.visibility = 'hidden';
-        @endif
+
+
+
+    @if (session()->has('user') && (session()->has('admin') ))
+    let a = await $.ajax({
+        url: `/api/getWatchlist/{{ $user->id }}/${window.location.pathname.substr(7)}`,
+        method: 'GET',
+    }).done((res) => {
+        //if current movie is watchlisted by current user
+        if (res.length > 0) {
+            button.style = 'background-color: grey';
+            button.innerHTML =
+                '<i class="fa-solid fa-check plus"></i> Remove from watchlist';
+            isAdded = true;
+        }
+        //if current movie is not watchlisted by current user
+        else {
+            button.style = 'background-color: yellow';
+            button.innerHTML =
+                '<i class="fa-solid fa-plus plus"></i> Add to watchlist';
+            isAdded = false;
+        }
+    })
+    //if not logged in
+    @else
+    document.querySelector('#watchlist-button').style.visibility = 'hidden';
+    @endif
     }
 
     getWatchlist();
@@ -131,7 +211,7 @@
     })
 
     async function deleteFromWatchlist() {
-        @if (session()->has('user'))
+        @if (session()->has('user') && (session()->has('admin')))
             return fetch('/api/removeFromWatchlist', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -146,9 +226,9 @@
     }
 
     async function addToWatchlist() {
-        @if (session()->has('user'))
+        @if (session()->has('user') && (session()->has('$admin')) )
             return $.ajax({
-                url: `/api/watchlist/${window.location.pathname.substr(7)}/{{ $user->id }}`,
+                url: `/api/watchlist/${window.location.pathname.substr(7)}/{{ $user,$admin->id }}`,
                 method: "GET",
                 success: (result) => {
                     console.log(result);
@@ -161,7 +241,7 @@
     function postComment(movieId, body) {
         @if (session()->has('user'))
             $.ajax({
-                url: `/api/post/${movieId}/${body}/{{ $user->id }}`,
+                url: `/api/post/${movieId}/${body}/{{ $user ->id }}`,
                 type: "GET",
                 success: (result) => {
                     console.log(result)
@@ -187,7 +267,7 @@
     }
 
     async function getUsername(userId) {
-        /*** 
+        /***
          * http call to endpoint querying database model User on userId getting the username
          * takes @String userId
          * return @String username
@@ -204,31 +284,28 @@
         return data;
     }
 
-    function refreshComments() {
-        $.ajax({
-            url: `/api/getmovie/${window.location.pathname.substr(7)}`,
-            type: "GET",
-            success: async (result) => {
-                comments.innerHTML = ""
-                for (let i = 0; i < result.length; i++) {
-                    let name = await getUsername(result[i].userId);
-                    comments.innerHTML +=
-                        `<div class="commentsUser"><span>${name}</span>${new Date(result[i].created_at).toString().substr(4, 20)}</div><div class="comments"><p class="commentsBody"> ${result[i].body} </p><button onclick="deleteComment('${result[i].commentsId}', ${result[i].userId})" id="commentsDelete"> X</button> </div>`
-                }
 
-            }
-        })
     }
 
-    document.querySelector("#commentForm").addEventListener('submit', (event) => {
-        event.preventDefault();
-        const input = document.querySelector("#commentInput").value;
+    // Array of comments
+    let commentsArray = [
+        "This is comment 1",
+        "This is comment 2",
+        "This is comment 3",
+        // Add more comments as needed
+    ];
 
-        postComment(window.location.pathname.substr(7), input)
-        refreshComments()
-    })
+    // Get the element to display comments
+    let commentsList = document.getElementById("displayComments");
 
-    refreshComments();
+    // Loop through commentsArray and create list items for each comment
+    commentsArray.forEach(comment => {
+        let listItem = document.createElement("li");
+        listItem.textContent = comment;
+        commentsList.appendChild(listItem);
+    });
+
+
 </script>
 
 </html>
@@ -431,4 +508,5 @@
     .plus {
         color: black;
     }
+
 </style>

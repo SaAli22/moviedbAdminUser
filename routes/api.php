@@ -47,3 +47,5 @@ Route::get('/getWatchlist/{user_id}/{movie_id}', [WatchlistController::class, 'g
 Route::get('getUserWatchlist/{user_id}', [WatchlistController::class, 'getUserWatchlist']);
 
 Route::get('/getPosterPath/{id}', [movieController::class, 'getPosterPath']);
+
+

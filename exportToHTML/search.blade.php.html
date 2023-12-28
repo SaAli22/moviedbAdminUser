@@ -1,0 +1,519 @@
+<html>
+<head>
+<title>search.blade.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d5b778;}
+.s1 { color: #bababa;}
+.s2 { color: #6aab73;}
+.s3 { color: #bcbec4;}
+.s4 { color: #cf8e6d;}
+.s5 { color: #bcbec4;}
+.s6 { color: #bcbec4;}
+.s7 { color: #6aab73;}
+.s8 { color: #56a8f5;}
+.s9 { color: #9876aa;}
+.s10 { color: #cf8e6d;}
+.s11 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+search.blade.php</font>
+</center></td></tr></table>
+<pre><span class="s0">&lt;header </span><span class="s1">class</span><span class="s2">=&quot;search&quot;</span><span class="s0">&gt;</span>
+  <span class="s0">&lt;a </span><span class="s1">class</span><span class="s2">=&quot;menu&quot;</span><span class="s0">&gt;</span><span class="s3">menu</span><span class="s0">&lt;/a&gt;</span>
+  <span class="s0">&lt;div&gt;</span>
+    <span class="s0">&lt;form </span><span class="s1">id</span><span class="s2">=&quot;form&quot; </span><span class="s1">type</span><span class="s2">=&quot;submit&quot; </span><span class="s1">action</span><span class="s2">=&quot;/test&quot; </span><span class="s1">method</span><span class="s2">=&quot;get&quot;</span><span class="s0">&gt;</span>
+      <span class="s0">&lt;input </span><span class="s1">id</span><span class="s2">=&quot;input&quot; </span><span class="s1">type</span><span class="s2">=&quot;search&quot; </span><span class="s1">class</span><span class="s2">=&quot;searchinput&quot; </span><span class="s1">name</span><span class="s2">=&quot;query&quot; </span><span class="s1">autocomplete</span><span class="s2">=&quot;off&quot; </span><span class="s0">/&gt;</span>
+      <span class="s0">&lt;button </span><span class="s1">class</span><span class="s2">=&quot;searchbutton&quot; </span><span class="s1">type</span><span class="s2">=&quot;submit&quot;</span><span class="s0">&gt;&lt;/button&gt;</span>
+    <span class="s0">&lt;/form&gt;</span>
+    <span class="s0">&lt;div </span><span class="s1">id</span><span class="s2">=&quot;dropdowndiv&quot; </span><span class="s1">class</span><span class="s2">=&quot;dropdown&quot;</span><span class="s0">&gt;&lt;/div&gt;</span>
+  <span class="s0">&lt;/div&gt;</span>
+
+
+  <span class="s4">&lt;?php</span>
+  <span class="s4">if </span><span class="s6">(!session()-&gt;has(</span><span class="s7">'user'</span><span class="s6">) &amp;&amp; !session()-&gt;has(</span><span class="s7">'admin'</span><span class="s6">)) {</span>
+      <span class="s4">echo </span><span class="s7">'&lt;button id=&quot;openModal&quot; class=&quot;menu&quot; type=&quot;button&quot;&gt;Log in&lt;/button&gt;'</span><span class="s6">;</span>
+  <span class="s6">} </span><span class="s4">else </span><span class="s6">{</span>
+      <span class="s4">echo </span><span class="s7">'&lt;button id=&quot;logout&quot; class=&quot;menu&quot; type=&quot;button&quot;&gt;Log out&lt;/button&gt;'</span><span class="s6">;</span>
+  <span class="s6">}</span>
+  <span class="s4">?&gt;</span>
+
+<span class="s0">&lt;/header&gt;</span>
+<span class="s0">&lt;div&gt;</span>
+  <span class="s0">&lt;div </span><span class="s1">id</span><span class="s2">=&quot;login-modal&quot;</span><span class="s0">&gt;</span>
+    <span class="s0">&lt;div </span><span class="s1">id</span><span class="s2">=&quot;myModal&quot; </span><span class="s1">class</span><span class="s2">=&quot;modal&quot;</span><span class="s0">&gt;</span>
+      <span class="s0">&lt;div </span><span class="s1">class</span><span class="s2">=&quot;modal-content&quot;</span><span class="s0">&gt;</span>
+        <span class="s0">&lt;div&gt;</span>
+          <span class="s0">&lt;span </span><span class="s1">class</span><span class="s2">=&quot;close&quot;</span><span class="s0">&gt;</span><span class="s8">&amp;times;</span><span class="s0">&lt;/span&gt;</span>
+          <span class="s0">&lt;h1 </span><span class="s1">id</span><span class="s2">=&quot;modal-title&quot;</span><span class="s0">&gt;</span><span class="s3">Log in</span><span class="s0">&lt;/h1&gt;</span>
+        <span class="s0">&lt;/div&gt;</span>
+        <span class="s4">&lt;?php</span>
+        <span class="s4">if </span><span class="s6">(</span><span class="s9">$errors</span><span class="s6">-&gt;any()) {</span>
+          <span class="s4">echo </span><span class="s7">'&lt;div style=&quot;position: absolute&quot;&gt; 
+        &lt;ul&gt;'</span><span class="s6">;</span>
+          <span class="s4">foreach </span><span class="s6">(</span><span class="s9">$errors</span><span class="s6">-&gt;all() </span><span class="s4">as </span><span class="s9">$error</span><span class="s6">) {</span>
+            <span class="s4">echo </span><span class="s9">$error</span><span class="s6">;</span>
+            <span class="s4">echo </span><span class="s7">'&lt;br&gt;&lt;/br&gt;'</span><span class="s6">;</span>
+          <span class="s6">}</span>
+          <span class="s4">echo </span><span class="s7">'&lt;/ul&gt;&lt;/div&gt;'</span><span class="s6">;</span>
+        <span class="s4">?&gt;</span>
+          <span class="s0">&lt;script&gt;</span>
+            <span class="s3">document.querySelector(</span><span class="s2">'.modal'</span><span class="s3">).style.visibility = </span><span class="s2">&quot;visible&quot;</span><span class="s3">;</span>
+          <span class="s0">&lt;/script&gt;</span>
+        <span class="s4">&lt;?php</span>
+        <span class="s6">}</span>
+        <span class="s4">?&gt;</span>
+
+        <span class="s0">&lt;div </span><span class="s1">class</span><span class="s2">=&quot;signup-content&quot;</span><span class="s0">&gt;</span>
+          <span class="s0">&lt;form </span><span class="s1">id</span><span class="s2">=&quot;signup-form&quot; </span><span class="s1">action</span><span class="s2">=&quot;</span><span class="s6">{{url(</span><span class="s7">'signup'</span><span class="s6">)}}</span><span class="s2">&quot; </span><span class="s1">method</span><span class="s2">=&quot;POST&quot;</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;label </span><span class="s1">for</span><span class="s2">=&quot;signupemail&quot;</span><span class="s0">&gt;</span><span class="s3">Email</span><span class="s0">&lt;/label&gt;</span>
+            <span class="s0">&lt;input </span><span class="s1">type</span><span class="s2">=&quot;email&quot; </span><span class="s1">name</span><span class="s2">=&quot;signupemail&quot; </span><span class="s1">id</span><span class="s2">=&quot;signupemail&quot; </span><span class="s1">required </span><span class="s0">/&gt;</span>
+            <span class="s0">&lt;label </span><span class="s1">for</span><span class="s2">=&quot;signupusername&quot;</span><span class="s0">&gt;</span><span class="s3">Username</span><span class="s0">&lt;/label&gt;</span>
+            <span class="s0">&lt;input </span><span class="s1">type</span><span class="s2">=&quot;text&quot; </span><span class="s1">name</span><span class="s2">=&quot;signupusername&quot; </span><span class="s1">id</span><span class="s2">=&quot;signupusername&quot; </span><span class="s1">required </span><span class="s0">/&gt;</span>
+            <span class="s0">&lt;label </span><span class="s1">for</span><span class="s2">=&quot;signuppassword&quot;</span><span class="s0">&gt;</span><span class="s3">Password</span><span class="s0">&lt;/label&gt;</span>
+            <span class="s0">&lt;input </span><span class="s1">type</span><span class="s2">=&quot;password&quot; </span><span class="s1">name</span><span class="s2">=&quot;signuppassword&quot; </span><span class="s1">id</span><span class="s2">=&quot;signuppassword&quot; </span><span class="s1">required </span><span class="s0">/&gt;</span>
+            <span class="s0">&lt;label </span><span class="s1">for</span><span class="s2">=&quot;signuppassword_confirmation&quot;</span><span class="s0">&gt;</span><span class="s3">Confirm password</span><span class="s0">&lt;/label&gt;</span>
+            <span class="s0">&lt;input </span><span class="s1">type</span><span class="s2">=&quot;password&quot; </span><span class="s1">name</span><span class="s2">=&quot;signuppassword_confirmation&quot; </span><span class="s1">id</span><span class="s2">=&quot;signuppassword_confirmation&quot; </span><span class="s0">/&gt;</span>
+            <span class="s0">&lt;button </span><span class="s1">id</span><span class="s2">=&quot;signup-button&quot; </span><span class="s1">type</span><span class="s2">=&quot;submit&quot;</span><span class="s0">&gt;</span><span class="s3">Sign up</span><span class="s0">&lt;/button&gt;</span>
+
+          <span class="s0">&lt;/form&gt;</span>
+
+
+        <span class="s0">&lt;/div&gt;</span>
+        <span class="s0">&lt;div </span><span class="s1">class</span><span class="s2">=&quot;login-content&quot;</span><span class="s0">&gt;</span>
+          <span class="s0">&lt;form </span><span class="s1">id</span><span class="s2">=&quot;login-form&quot; </span><span class="s1">action</span><span class="s2">=&quot;</span><span class="s6">{{url(</span><span class="s7">'authuser'</span><span class="s6">)}}</span><span class="s2">&quot; </span><span class="s1">method</span><span class="s2">=&quot;POST&quot;</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;label </span><span class="s1">for</span><span class="s2">=&quot;email&quot;</span><span class="s0">&gt;</span><span class="s3">Email</span><span class="s0">&lt;/label&gt;</span>
+            <span class="s0">&lt;input </span><span class="s1">type</span><span class="s2">=&quot;email&quot; </span><span class="s1">name</span><span class="s2">=&quot;email&quot; </span><span class="s1">id</span><span class="s2">=&quot;email&quot; </span><span class="s1">required </span><span class="s0">/&gt;</span>
+            <span class="s0">&lt;label </span><span class="s1">for</span><span class="s2">=&quot;password&quot;</span><span class="s0">&gt;</span><span class="s3">Password</span><span class="s0">&lt;/label&gt;</span>
+            <span class="s0">&lt;input </span><span class="s1">type</span><span class="s2">=&quot;password&quot; </span><span class="s1">name</span><span class="s2">=&quot;password&quot; </span><span class="s1">id</span><span class="s2">=&quot;password&quot; </span><span class="s1">required </span><span class="s0">/&gt;</span>
+            <span class="s0">&lt;button </span><span class="s1">id</span><span class="s2">=&quot;login-button&quot; </span><span class="s1">type</span><span class="s2">=&quot;submit&quot;</span><span class="s0">&gt;</span><span class="s3">Log in</span><span class="s0">&lt;/button&gt;</span>
+         
+
+          <span class="s0">&lt;/form&gt;</span>
+          <span class="s0">&lt;div </span><span class="s1">id</span><span class="s2">=&quot;sign-up&quot;</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;a&gt;</span><span class="s3">Sign up</span><span class="s0">&lt;/a&gt;</span>
+          <span class="s0">&lt;/div&gt;</span>
+          <span class="s0">&lt;div </span><span class="s1">id</span><span class="s2">=&quot;forgot-password&quot;</span><span class="s0">&gt;</span>
+            <span class="s0">&lt;a </span><span class="s1">href</span><span class="s2">=&quot;&quot;</span><span class="s0">&gt;</span><span class="s3">Forgot password</span><span class="s0">&lt;/a&gt;</span>
+          <span class="s0">&lt;/div&gt;</span>
+        <span class="s0">&lt;/div&gt;</span>
+      <span class="s0">&lt;/div&gt;</span>
+    <span class="s0">&lt;/div&gt;</span>
+  <span class="s0">&lt;/div&gt;</span>
+  <span class="s4">&lt;?php</span>
+  <span class="s4">if </span><span class="s6">(</span><span class="s9">$errors</span><span class="s6">-&gt;has(</span><span class="s7">'signupemail'</span><span class="s6">) | </span><span class="s9">$errors</span><span class="s6">-&gt;has(</span><span class="s7">'signupusername'</span><span class="s6">) | </span><span class="s9">$errors</span><span class="s6">-&gt;has(</span><span class="s7">'signuppassword'</span><span class="s6">)) {</span>
+  <span class="s4">?&gt;</span>
+    <span class="s0">&lt;script&gt;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.login-content'</span><span class="s3">).style.display = </span><span class="s2">&quot;none&quot;</span><span class="s3">;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.signup-content'</span><span class="s3">).style.display = </span><span class="s2">&quot;block&quot;</span><span class="s3">;</span>
+    <span class="s0">&lt;/script&gt;</span>
+  <span class="s4">&lt;?php</span>
+  <span class="s6">}</span>
+  <span class="s4">?&gt;</span>
+  <span class="s0">&lt;script&gt;</span>
+
+    <span class="s4">&lt;?php if </span><span class="s6">(!session()-&gt;has(</span><span class="s7">'user'</span><span class="s6">) &amp;&amp; (!session()-&gt;has(</span><span class="s7">'admin'</span><span class="s6">)) )   { </span><span class="s4">?&gt;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'#openModal'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">document.querySelector(</span><span class="s2">'.modal'</span><span class="s3">).style.visibility = </span><span class="s2">&quot;visible&quot;</span><span class="s3">;</span>
+      <span class="s3">})</span>
+    <span class="s4">&lt;?php </span><span class="s6">} </span><span class="s4">else </span><span class="s6">{</span>
+    <span class="s4">?&gt;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'#logout'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">$.ajax({</span>
+          <span class="s3">url: </span><span class="s2">&quot;/logout&quot;</span><span class="s3">,</span>
+          <span class="s3">method: </span><span class="s2">'GET'</span><span class="s3">,</span>
+          <span class="s3">success: (result) =&gt; {</span>
+            <span class="s3">console.log(result);</span>
+          <span class="s3">}</span>
+        <span class="s3">}).then(() =&gt; {</span>
+          <span class="s3">window.location.reload();</span>
+        <span class="s3">})</span>
+      <span class="s3">})</span>
+
+    <span class="s4">&lt;?php </span><span class="s6">} </span><span class="s4">?&gt;</span>
+
+    <span class="s4">&lt;?php if </span><span class="s6">(!session()-&gt;has(</span><span class="s7">'admin'</span><span class="s6">)) { </span><span class="s4">?&gt;</span>
+    <span class="s3">document.querySelector(</span><span class="s2">'#openModal'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">document.querySelector(</span><span class="s2">'.modal'</span><span class="s3">).style.visibility = </span><span class="s2">&quot;visible&quot;</span><span class="s3">;</span>
+    <span class="s3">})</span>
+    <span class="s4">&lt;?php </span><span class="s6">} </span><span class="s4">else </span><span class="s6">{</span>
+        <span class="s4">?&gt;</span>
+    <span class="s3">document.querySelector(</span><span class="s2">'#logout'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">$.ajax({</span>
+            <span class="s3">url: </span><span class="s2">&quot;/logout&quot;</span><span class="s3">,</span>
+            <span class="s3">method: </span><span class="s2">'GET'</span><span class="s3">,</span>
+            <span class="s3">success: (result) =&gt; {</span>
+                <span class="s3">console.log(result);</span>
+            <span class="s3">}</span>
+        <span class="s3">}).then(() =&gt; {</span>
+            <span class="s3">window.location.reload();</span>
+        <span class="s3">})</span>
+    <span class="s3">})</span>
+    <span class="s4">&lt;?php </span><span class="s6">} </span><span class="s4">?&gt;</span>
+
+    <span class="s4">&lt;?php if </span><span class="s6">(!session()-&gt;has(</span><span class="s7">'admin'</span><span class="s6">)) { </span><span class="s4">?&gt;</span>
+    <span class="s3">document.querySelector(</span><span class="s2">'#openModal'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">document.querySelector(</span><span class="s2">'.modal'</span><span class="s3">).style.visibility = </span><span class="s2">&quot;visible&quot;</span><span class="s3">;</span>
+    <span class="s3">})</span>
+    <span class="s4">&lt;?php </span><span class="s6">} </span><span class="s4">else </span><span class="s6">{</span>
+        <span class="s4">?&gt;</span>
+    <span class="s3">document.querySelector(</span><span class="s2">'#logout'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">$.ajax({</span>
+            <span class="s3">url: </span><span class="s2">&quot;/logout&quot;</span><span class="s3">,</span>
+            <span class="s3">method: </span><span class="s2">'GET'</span><span class="s3">,</span>
+            <span class="s3">success: (result) =&gt; {</span>
+                <span class="s3">console.log(result);</span>
+            <span class="s3">}</span>
+        <span class="s3">}).then(() =&gt; {</span>
+            <span class="s3">window.location.reload();</span>
+        <span class="s3">})</span>
+    <span class="s3">})</span>
+    <span class="s4">&lt;?php </span><span class="s6">} </span><span class="s4">?&gt;</span>
+
+
+    <span class="s3">document.querySelector(</span><span class="s2">&quot;#sign-up&quot;</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.login-content'</span><span class="s3">).style.display = </span><span class="s2">&quot;none&quot;</span><span class="s3">;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.signup-content'</span><span class="s3">).style.display = </span><span class="s2">&quot;block&quot;</span><span class="s3">;</span>
+    <span class="s3">})</span>
+    <span class="s3">document.querySelector(</span><span class="s2">'.close'</span><span class="s3">).addEventListener(</span><span class="s2">'click'</span><span class="s3">, (event) =&gt; {</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.login-content'</span><span class="s3">).style.display = </span><span class="s2">&quot;block&quot;</span><span class="s3">;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.signup-content'</span><span class="s3">).style.display = </span><span class="s2">&quot;none&quot;</span><span class="s3">;</span>
+      <span class="s3">document.querySelector(</span><span class="s2">'.modal'</span><span class="s3">).style.visibility = </span><span class="s2">&quot;hidden&quot;</span><span class="s3">;</span>
+    <span class="s3">})</span>
+
+    <span class="s3">async </span><span class="s10">function </span><span class="s3">signUp(email, name, password, password_confirmation) {</span>
+      <span class="s10">let </span><span class="s3">url = </span><span class="s2">&quot;/signup&quot;</span>
+      <span class="s3">await fetch(url, {</span>
+        <span class="s3">method: </span><span class="s2">&quot;POST&quot;</span><span class="s3">,</span>
+        <span class="s3">body: JSON.stringify({</span>
+          <span class="s3">name,</span>
+          <span class="s3">email,</span>
+          <span class="s3">password,</span>
+          <span class="s3">password_confirmation</span>
+        <span class="s3">}),</span>
+        <span class="s3">headers: {</span>
+          <span class="s2">&quot;Content-Type&quot;</span><span class="s3">: </span><span class="s2">&quot;application/json&quot;</span>
+        <span class="s3">}</span>
+      <span class="s3">})</span>
+    <span class="s3">}</span>
+
+    <span class="s10">function </span><span class="s3">login(email, password) {</span>
+      <span class="s10">let </span><span class="s3">url = </span><span class="s2">&quot;/api/login&quot;</span>
+      <span class="s3">fetch(url, {</span>
+        <span class="s3">method: </span><span class="s2">&quot;POST&quot;</span><span class="s3">,</span>
+        <span class="s3">body: JSON.stringify({</span>
+          <span class="s3">email,</span>
+          <span class="s3">password</span>
+        <span class="s3">}),</span>
+        <span class="s3">headers: {</span>
+          <span class="s2">&quot;Content-type&quot;</span><span class="s3">: </span><span class="s2">&quot;application/json&quot;</span>
+        <span class="s3">}</span>
+      <span class="s3">}).then((res) =&gt; {</span>
+        <span class="s3">console.log(res)</span>
+        <span class="s10">return </span><span class="s3">res.status == </span><span class="s11">302 </span><span class="s3">? </span><span class="s10">true </span><span class="s3">: </span><span class="s10">false</span><span class="s3">;</span>
+      <span class="s3">}).catch((err) =&gt; {</span>
+        <span class="s3">console.error(err)</span>
+      <span class="s3">})</span>
+    <span class="s3">}</span>
+
+    <span class="s10">const </span><span class="s3">APIKEY = </span><span class="s2">&quot;7356f6c781f842026367b8baa225abdb&quot;</span><span class="s3">;</span>
+
+    <span class="s10">function </span><span class="s3">setupDropdown() {</span>
+      <span class="s10">let </span><span class="s3">temp = document.querySelector(</span><span class="s2">&quot;#dropdowndiv&quot;</span><span class="s3">);</span>
+      <span class="s10">let </span><span class="s3">searchinput = document.querySelector(</span><span class="s2">&quot;.searchinput&quot;</span><span class="s3">);</span>
+      <span class="s10">const </span><span class="s3">whatever = (event) =&gt; {</span>
+        <span class="s10">if </span><span class="s3">(searchinput.value != </span><span class="s2">&quot;&quot;</span><span class="s3">) {</span>
+          <span class="s3">temp.style.display = </span><span class="s2">&quot;grid&quot;</span><span class="s3">;</span>
+          <span class="s3">temp.style.gridTemplateRows = </span><span class="s11">3</span><span class="s3">;</span>
+        <span class="s3">} </span><span class="s10">else </span><span class="s3">{</span>
+          <span class="s3">temp.style.display = </span><span class="s2">&quot;none&quot;</span><span class="s3">;</span>
+        <span class="s3">}</span>
+      <span class="s3">};</span>
+      <span class="s3">searchinput.addEventListener(</span><span class="s2">&quot;input&quot;</span><span class="s3">, (event) =&gt; {</span>
+        <span class="s3">temp.innerHTML = </span><span class="s2">&quot;&quot;</span><span class="s3">;</span>
+        <span class="s3">console.log(searchinput.value);</span>
+        <span class="s3">$.ajax({</span>
+          <span class="s3">url: </span><span class="s2">`https://api.themoviedb.org/3/search/movie?query=</span><span class="s3">${searchinput.value}</span><span class="s2">&amp;api_key=</span><span class="s3">${APIKEY}</span><span class="s2">`</span><span class="s3">,</span>
+          <span class="s3">type: </span><span class="s2">&quot;GET&quot;</span><span class="s3">,</span>
+          <span class="s3">success: (result) =&gt; {</span>
+            <span class="s10">if </span><span class="s3">(result) {</span>
+              <span class="s3">result.results.slice(</span><span class="s11">0</span><span class="s3">, </span><span class="s11">5</span><span class="s3">).forEach((element) =&gt; {</span>
+                <span class="s3">addMovieToDropdown(element.id);</span>
+              <span class="s3">});</span>
+            <span class="s3">}</span>
+          <span class="s3">},</span>
+          <span class="s3">error: (err) =&gt; {</span>
+            <span class="s3">console.log(err);</span>
+          <span class="s3">},</span>
+        <span class="s3">});</span>
+        <span class="s10">if </span><span class="s3">(searchinput.value != </span><span class="s2">&quot;&quot;</span><span class="s3">) {</span>
+          <span class="s3">temp.style.display = </span><span class="s2">&quot;grid&quot;</span><span class="s3">;</span>
+          <span class="s3">temp.style.gridTemplateRows = </span><span class="s11">3</span><span class="s3">;</span>
+        <span class="s3">} </span><span class="s10">else </span><span class="s3">{</span>
+          <span class="s3">temp.style.display = </span><span class="s2">&quot;none&quot;</span><span class="s3">;</span>
+        <span class="s3">}</span>
+      <span class="s3">});</span>
+      <span class="s3">window.addEventListener(</span><span class="s2">&quot;load&quot;</span><span class="s3">, whatever);</span>
+    <span class="s3">}</span>
+
+    <span class="s10">function </span><span class="s3">addMovieToDropdown(id) {</span>
+      <span class="s10">let </span><span class="s3">accessToken =</span>
+        <span class="s2">&quot;Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzU2ZjZjNzgxZjg0MjAyNjM2N2I4YmFhMjI1YWJkYiIsInN1YiI6IjY1MDFjOTdkNTU0NWNhMDBhYjVkYmRkOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zvglGM1QgLDK33Dt6PpMK9jeAOrLNnxClZ6mkLeMgBE&quot;</span><span class="s3">;</span>
+      <span class="s3">$.ajax({</span>
+        <span class="s3">url: </span><span class="s2">`https://api.themoviedb.org/3/movie/</span><span class="s3">${id}</span><span class="s2">`</span><span class="s3">,</span>
+        <span class="s3">type: </span><span class="s2">&quot;GET&quot;</span><span class="s3">,</span>
+        <span class="s3">beforeSend: (req) =&gt; {</span>
+          <span class="s3">req.setRequestHeader(</span><span class="s2">&quot;Authorization&quot;</span><span class="s3">, accessToken);</span>
+        <span class="s3">},</span>
+        <span class="s3">success: (result) =&gt; {</span>
+          <span class="s10">let </span><span class="s3">a = document.createElement(</span><span class="s2">&quot;a&quot;</span><span class="s3">);</span>
+          <span class="s10">let </span><span class="s3">title = document.createElement(</span><span class="s2">&quot;h3&quot;</span><span class="s3">);</span>
+          <span class="s10">let </span><span class="s3">year = document.createElement(</span><span class="s2">&quot;h3&quot;</span><span class="s3">);</span>
+          <span class="s10">let </span><span class="s3">actors = document.createElement(</span><span class="s2">&quot;h3&quot;</span><span class="s3">);</span>
+          <span class="s10">let </span><span class="s3">img = document.createElement(</span><span class="s2">&quot;img&quot;</span><span class="s3">);</span>
+          <span class="s10">let </span><span class="s3">div = document.createElement(</span><span class="s2">&quot;div&quot;</span><span class="s3">);</span>
+          <span class="s10">let </span><span class="s3">div2 = document.createElement(</span><span class="s2">&quot;div&quot;</span><span class="s3">);</span>
+          <span class="s10">if </span><span class="s3">(result.poster_path == </span><span class="s10">null</span><span class="s3">) {</span>
+            <span class="s3">img.setAttribute(</span>
+              <span class="s2">&quot;src&quot;</span><span class="s3">,</span>
+              <span class="s2">&quot;https://img.freepik.com/free-photo/abstract-luxury-plain-blur-grey-black-gradient-used-as-background-studio-wall-display-your-products_1258-63747.jpg?w=2000&quot;</span>
+            <span class="s3">);</span>
+          <span class="s3">} </span><span class="s10">else </span><span class="s3">{</span>
+            <span class="s3">img.setAttribute(</span>
+              <span class="s2">&quot;src&quot;</span><span class="s3">,</span>
+              <span class="s2">`https://image.tmdb.org/t/p/w500</span><span class="s3">${result.poster_path}</span><span class="s2">`</span>
+            <span class="s3">);</span>
+          <span class="s3">}</span>
+          <span class="s3">img.setAttribute(</span><span class="s2">&quot;class&quot;</span><span class="s3">, </span><span class="s2">&quot;dropdownimage&quot;</span><span class="s3">);</span>
+          <span class="s3">div.appendChild(img);</span>
+          <span class="s3">a.addEventListener(</span><span class="s2">&quot;click&quot;</span><span class="s3">, (event) =&gt; {</span>
+            <span class="s10">var </span><span class="s3">data = result;</span>
+            <span class="s3">sessionStorage.setItem(</span><span class="s2">&quot;posterpath&quot;</span><span class="s3">, data.poster_path);</span>
+            <span class="s3">sessionStorage.setItem(</span><span class="s2">&quot;title&quot;</span><span class="s3">, data.title);</span>
+            <span class="s3">sessionStorage.setItem(</span><span class="s2">&quot;overview&quot;</span><span class="s3">, data.overview);</span>
+            <span class="s3">sessionStorage.setItem(</span><span class="s2">&quot;id&quot;</span><span class="s3">, data.id);</span>
+            <span class="s10">var </span><span class="s3">genredata = </span><span class="s2">&quot;&quot;</span><span class="s3">;</span>
+            <span class="s3">data.genres.forEach((element) =&gt; {</span>
+              <span class="s3">genredata += element.id + </span><span class="s2">&quot;,&quot;</span><span class="s3">;</span>
+            <span class="s3">});</span>
+            <span class="s3">sessionStorage.setItem(</span><span class="s2">&quot;genres&quot;</span><span class="s3">, genredata);</span>
+            <span class="s3">window.location.href = </span><span class="s2">`/movie/</span><span class="s3">${data.id}</span><span class="s2">`</span><span class="s3">;</span>
+          <span class="s3">});</span>
+          <span class="s3">actors.setAttribute(</span><span class="s2">&quot;id&quot;</span><span class="s3">, </span><span class="s2">&quot;undertitle&quot;</span><span class="s3">);</span>
+          <span class="s3">year.setAttribute(</span><span class="s2">&quot;id&quot;</span><span class="s3">, </span><span class="s2">&quot;undertitle&quot;</span><span class="s3">);</span>
+          <span class="s3">year.textContent = result.release_date.substr(</span><span class="s11">0</span><span class="s3">, </span><span class="s11">4</span><span class="s3">);</span>
+          <span class="s3">title.textContent = result.title;</span>
+          <span class="s3">actors.textContent = </span><span class="s2">&quot;Leonardo DiCaprio&quot;</span><span class="s3">;</span>
+          <span class="s3">div2.setAttribute(</span><span class="s2">&quot;id&quot;</span><span class="s3">, </span><span class="s2">&quot;div2&quot;</span><span class="s3">);</span>
+          <span class="s3">div2.appendChild(title);</span>
+          <span class="s3">div2.appendChild(year);</span>
+          <span class="s3">div2.appendChild(actors);</span>
+          <span class="s3">div.appendChild(div2);</span>
+          <span class="s3">div.setAttribute(</span><span class="s2">&quot;class&quot;</span><span class="s3">, </span><span class="s2">&quot;dropdownitem&quot;</span><span class="s3">);</span>
+          <span class="s3">div.setAttribute(</span><span class="s2">&quot;id&quot;</span><span class="s3">, </span><span class="s2">&quot;dropdowndiv2&quot;</span><span class="s3">);</span>
+          <span class="s3">a.appendChild(div);</span>
+          <span class="s3">document.querySelector(</span><span class="s2">&quot;#dropdowndiv&quot;</span><span class="s3">).appendChild(a);</span>
+        <span class="s3">},</span>
+      <span class="s3">});</span>
+    <span class="s3">}</span>
+    <span class="s3">setupDropdown();</span>
+  <span class="s0">&lt;/script&gt;</span>
+  <span class="s0">&lt;style </span><span class="s1">scoped</span><span class="s0">&gt;</span>
+    <span class="s10">@import </span><span class="s0">url</span><span class="s3">(</span><span class="s2">'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap'</span><span class="s3">);</span>
+
+    <span class="s0">* </span><span class="s3">{</span>
+      <span class="s1">font-family</span><span class="s3">: </span><span class="s0">Montserrat</span><span class="s3">, </span><span class="s2">sans-serif</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#dropdowndiv </span><span class="s3">{</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s11">91</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s2">fit-content</span><span class="s3">;</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">flex-direction</span><span class="s3">: </span><span class="s2">column</span><span class="s3">;</span>
+      <span class="s1">position</span><span class="s3">: </span><span class="s2">absolute</span><span class="s3">;</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s8">#999</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">header </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">position</span><span class="s3">: </span><span class="s2">relative</span><span class="s3">;</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s8">#333</span><span class="s3">;</span>
+      <span class="s1">max-width</span><span class="s3">: </span><span class="s11">100</span><span class="s3">%;</span>
+      <span class="s1">padding</span><span class="s3">: </span><span class="s11">2</span><span class="s2">rem </span><span class="s11">0 2</span><span class="s2">rem </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">z-index</span><span class="s3">: </span><span class="s11">1</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">menu </span><span class="s3">{</span>
+      <span class="s1">text-transform</span><span class="s3">: </span><span class="s2">capitalize</span><span class="s3">;</span>
+      <span class="s1">text-decoration</span><span class="s3">: </span><span class="s2">underline</span><span class="s3">;</span>
+      <span class="s1">font-size</span><span class="s3">: </span><span class="s2">large</span><span class="s3">;</span>
+      <span class="s1">padding-top</span><span class="s3">: </span><span class="s11">0.5</span><span class="s2">vh</span><span class="s3">;</span>
+      <span class="s1">margin</span><span class="s3">: </span><span class="s11">0 4</span><span class="s2">rem </span><span class="s11">0 4</span><span class="s2">rem</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#form </span><span class="s3">{</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s8">#555</span><span class="s3">;</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">border</span><span class="s3">: </span><span class="s11">1</span><span class="s2">px solid currentColor</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+
+    <span class="s0">input</span><span class="s3">[</span><span class="s0">type</span><span class="s3">=</span><span class="s2">&quot;search&quot;</span><span class="s3">] {</span>
+      <span class="s1">border</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+      <span class="s1">background</span><span class="s3">: </span><span class="s2">white</span><span class="s3">;</span>
+      <span class="s1">margin</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">padding</span><span class="s3">: </span><span class="s11">7</span><span class="s2">px </span><span class="s11">8</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">font-size</span><span class="s3">: </span><span class="s11">14</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s2">inherit</span><span class="s3">;</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s11">91</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">border-radius</span><span class="s3">: </span><span class="s11">2</span><span class="s2">px</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">searchbutton </span><span class="s3">{</span>
+      <span class="s1">text-indent</span><span class="s3">: -</span><span class="s11">999</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">overflow</span><span class="s3">: </span><span class="s2">hidden</span><span class="s3">;</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s11">40</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">padding</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">margin</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">border</span><span class="s3">: </span><span class="s11">1</span><span class="s2">px solid transparent</span><span class="s3">;</span>
+      <span class="s1">border-radius</span><span class="s3">: </span><span class="s2">inherit</span><span class="s3">;</span>
+      <span class="s1">background</span><span class="s3">: </span><span class="s2">transparent </span><span class="s0">url</span><span class="s3">(</span><span class="s2">&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E&quot;</span><span class="s3">) </span><span class="s2">no-repeat center</span><span class="s3">;</span>
+      <span class="s1">cursor</span><span class="s3">: </span><span class="s2">pointer</span><span class="s3">;</span>
+      <span class="s1">opacity</span><span class="s3">: </span><span class="s11">1</span><span class="s3">;</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s2">white</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#login-button</span><span class="s3">,</span>
+    <span class="s0">#signup-button </span><span class="s3">{</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s11">2</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s8">#999</span><span class="s3">;</span>
+      <span class="s1">border</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+      <span class="s1">border-radius</span><span class="s3">: </span><span class="s11">2</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">cursor</span><span class="s3">: </span><span class="s2">pointer</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">button</span><span class="s3">[</span><span class="s0">type</span><span class="s3">=</span><span class="s2">&quot;submit&quot;</span><span class="s3">]:</span><span class="s0">hover </span><span class="s3">{</span>
+      <span class="s1">opacity</span><span class="s3">: </span><span class="s11">0.7</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">form</span><span class="s3">.</span><span class="s0">nosubmit </span><span class="s3">{</span>
+      <span class="s1">border</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+      <span class="s1">padding</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">dropdownitem </span><span class="s3">{</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s2">fit-content</span><span class="s3">;</span>
+      <span class="s1">border-bottom</span><span class="s3">: </span><span class="s11">1</span><span class="s2">px solid grey</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">dropdownimage </span><span class="s3">{</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s11">4.5</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s11">7</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">padding</span><span class="s3">: </span><span class="s11">0.5</span><span class="s2">rem</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#dropdowndiv2 </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">dropdowntitle </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">justify-content</span><span class="s3">: </span><span class="s2">left</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#undertitle </span><span class="s3">{</span>
+      <span class="s1">font-weight</span><span class="s3">: </span><span class="s2">normal</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">modal </span><span class="s3">{</span>
+      <span class="s1">position</span><span class="s3">: </span><span class="s2">fixed</span><span class="s3">;</span>
+      <span class="s1">z-index</span><span class="s3">: </span><span class="s11">1</span><span class="s3">;</span>
+      <span class="s1">left</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">top</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s11">100</span><span class="s3">%;</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s11">100</span><span class="s3">%;</span>
+      <span class="s1">overflow</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s0">rgb</span><span class="s3">(</span><span class="s11">0</span><span class="s3">, </span><span class="s11">0</span><span class="s3">, </span><span class="s11">0</span><span class="s3">);</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s0">rgba</span><span class="s3">(</span><span class="s11">0</span><span class="s3">, </span><span class="s11">0</span><span class="s3">, </span><span class="s11">0</span><span class="s3">, </span><span class="s11">0.4</span><span class="s3">);</span>
+      <span class="s1">visibility</span><span class="s3">: </span><span class="s2">hidden</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">modal-content </span><span class="s3">{</span>
+      <span class="s1">position</span><span class="s3">: </span><span class="s2">fixed</span><span class="s3">;</span>
+      <span class="s1">left</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">bottom</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">top</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">right</span><span class="s3">: </span><span class="s11">0</span><span class="s3">;</span>
+      <span class="s1">background-color</span><span class="s3">: </span><span class="s8">#fefefe</span><span class="s3">;</span>
+      <span class="s1">margin</span><span class="s3">: </span><span class="s11">5</span><span class="s2">rem </span><span class="s11">30</span><span class="s2">rem </span><span class="s11">5</span><span class="s2">rem </span><span class="s11">30</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+      <span class="s1">padding</span><span class="s3">: </span><span class="s11">20</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">border-radius</span><span class="s3">: </span><span class="s11">20</span><span class="s2">px</span><span class="s3">;</span>
+
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">close </span><span class="s3">{</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s8">#aaa</span><span class="s3">;</span>
+      <span class="s1">float</span><span class="s3">: </span><span class="s2">right</span><span class="s3">;</span>
+      <span class="s1">font-size</span><span class="s3">: </span><span class="s11">28</span><span class="s2">px</span><span class="s3">;</span>
+      <span class="s1">font-weight</span><span class="s3">: </span><span class="s2">bold</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">close</span><span class="s3">:</span><span class="s0">hover</span><span class="s3">,</span>
+    <span class="s3">.</span><span class="s0">close</span><span class="s3">:</span><span class="s0">focus </span><span class="s3">{</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s2">black</span><span class="s3">;</span>
+      <span class="s1">text-decoration</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+      <span class="s1">cursor</span><span class="s3">: </span><span class="s2">pointer</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#openModal</span><span class="s3">,</span>
+    <span class="s0">#logout </span><span class="s3">{</span>
+      <span class="s1">border</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+      <span class="s1">background</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s2">white</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#login-modal </span><span class="s3">{</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s2">black</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#login-form</span><span class="s3">,</span>
+    <span class="s0">#signup-form </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">flex-direction</span><span class="s3">: </span><span class="s2">column</span><span class="s3">;</span>
+      <span class="s1">width</span><span class="s3">: </span><span class="s11">25</span><span class="s3">%;</span>
+      <span class="s1">margin</span><span class="s3">: </span><span class="s2">auto</span><span class="s3">;</span>
+      <span class="s1">margin-top</span><span class="s3">: </span><span class="s11">10</span><span class="s2">rem</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#sign-up</span><span class="s3">,</span>
+    <span class="s0">#forgot-password </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">justify-content</span><span class="s3">: </span><span class="s2">center</span><span class="s3">;</span>
+      <span class="s1">margin-top</span><span class="s3">: </span><span class="s11">1</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">color</span><span class="s3">: </span><span class="s8">#555</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#login-form</span><span class="s3">&gt;</span><span class="s0">input</span><span class="s3">,</span>
+    <span class="s0">#signup-form</span><span class="s3">&gt;</span><span class="s0">input </span><span class="s3">{</span>
+      <span class="s1">height</span><span class="s3">: </span><span class="s11">2</span><span class="s2">rem</span><span class="s3">;</span>
+      <span class="s1">margin-bottom</span><span class="s3">: </span><span class="s11">1</span><span class="s2">rem</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s3">.</span><span class="s0">signup-content </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">none</span><span class="s3">;</span>
+    <span class="s3">}</span>
+
+    <span class="s0">#modal-title </span><span class="s3">{</span>
+      <span class="s1">display</span><span class="s3">: </span><span class="s2">flex</span><span class="s3">;</span>
+      <span class="s1">justify-content</span><span class="s3">: </span><span class="s2">center</span><span class="s3">;</span>
+    <span class="s3">}</span>
+  <span class="s0">&lt;/style&gt;</span>
+</pre>
+</body>
+</html>

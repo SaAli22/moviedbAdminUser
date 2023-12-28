@@ -7,13 +7,16 @@
     </form>
     <div id="dropdowndiv" class="dropdown"></div>
   </div>
+
+
   <?php
-  if (!session()->has('user')) {
-    echo '<button id="openModal" class="menu" type="button">Log in</button>';
+  if (!session()->has('user') && !session()->has('admin')) {
+      echo '<button id="openModal" class="menu" type="button">Log in</button>';
   } else {
-    echo '<button id="logout" class="menu" type="button">Log out</button>';
+      echo '<button id="logout" class="menu" type="button">Log out</button>';
   }
   ?>
+
 </header>
 <div>
   <div id="login-modal">
@@ -51,7 +54,10 @@
             <label for="signuppassword_confirmation">Confirm password</label>
             <input type="password" name="signuppassword_confirmation" id="signuppassword_confirmation" />
             <button id="signup-button" type="submit">Sign up</button>
+
           </form>
+
+
         </div>
         <div class="login-content">
           <form id="login-form" action="{{url('authuser')}}" method="POST">
@@ -60,6 +66,8 @@
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required />
             <button id="login-button" type="submit">Log in</button>
+
+
           </form>
           <div id="sign-up">
             <a>Sign up</a>
@@ -82,7 +90,8 @@
   }
   ?>
   <script>
-    <?php if (!session()->has('user')) { ?>
+
+    <?php if (!session()->has('user') && (!session()->has('admin')) )   { ?>
       document.querySelector('#openModal').addEventListener('click', (event) => {
         document.querySelector('.modal').style.visibility = "visible";
       })
@@ -99,7 +108,47 @@
           window.location.reload();
         })
       })
+
     <?php } ?>
+
+    <?php if (!session()->has('admin')) { ?>
+    document.querySelector('#openModal').addEventListener('click', (event) => {
+        document.querySelector('.modal').style.visibility = "visible";
+    })
+    <?php } else {
+        ?>
+    document.querySelector('#logout').addEventListener('click', (event) => {
+        $.ajax({
+            url: "/logout",
+            method: 'GET',
+            success: (result) => {
+                console.log(result);
+            }
+        }).then(() => {
+            window.location.reload();
+        })
+    })
+    <?php } ?>
+
+    <?php if (!session()->has('admin')) { ?>
+    document.querySelector('#openModal').addEventListener('click', (event) => {
+        document.querySelector('.modal').style.visibility = "visible";
+    })
+    <?php } else {
+        ?>
+    document.querySelector('#logout').addEventListener('click', (event) => {
+        $.ajax({
+            url: "/logout",
+            method: 'GET',
+            success: (result) => {
+                console.log(result);
+            }
+        }).then(() => {
+            window.location.reload();
+        })
+    })
+    <?php } ?>
+
 
     document.querySelector("#sign-up").addEventListener('click', (event) => {
       document.querySelector('.login-content').style.display = "none";

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function createUser()
+    public function createUser(): \Illuminate\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
         validator(request()->all(), [
             'signupusername' => 'required|unique:users,name',
@@ -32,6 +33,23 @@ class UserController extends Controller
         return redirect('/');
     }
 
+    public function createAdmin(): \Illuminate\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse|\Illuminate\Contracts\Foundation\Application
+    {
+
+
+
+
+
+        $admin = new Admin();
+
+        $admin->email = "admin@example.com";
+        $admin->password = "your_password";
+
+
+        auth()->login($admin);
+        return redirect('/');
+    }
+
     public function authUser()
     {
         $credentials = validator(request()->all(), [
@@ -41,9 +59,15 @@ class UserController extends Controller
 
         $remember = true;
 
+
         if (auth()->attempt($credentials, $remember)) {
             session(['user' => auth()->user()]);
+            return redirect("/");
+        }
 
+
+        if (auth()->guard('admin')->attempt($credentials, $remember)) {
+            session(['admin' => auth()->guard('admin')->user()]);
             return redirect("/");
         }
 
@@ -54,8 +78,9 @@ class UserController extends Controller
 
     public function logout()
     {
-        session()->forget('user');
+        session()->forget(['user',"admin"]);
         auth()->logout();
+
 
         return redirect('/');
     }
@@ -68,4 +93,6 @@ class UserController extends Controller
 
         return $user->name;
     }
+
+
 }
