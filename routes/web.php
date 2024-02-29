@@ -51,11 +51,9 @@ Route::get('/updateDetails', [MovieController::class, 'updateDetails']);
 Route::put('/api/updateMovieDetails/{movieId}', [MovieController::class, 'updateMovieDetails']);
 Route::put('/updateMovieOverview/{movie_id}', [MovieController::class, 'updateMovieOverview']);
 
-Route::post('/comments', [CommentController::class, 'store']);
-Route::get('/comments/movie/{movieId}', [CommentController::class, 'getAllForMovie']);
-Route::get('/comments/user/{userId}', [CommentController::class, 'getAllForUser']);
-Route::delete('/comments/{commentId}', [CommentController::class, 'deleteComment']);
-Route::put('/comments/{commentId}', [CommentController::class, 'updateComment']);
+
+
+
 Route::post('/store', [CommentController::class, 'store']);
 Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 Route::delete('/comments/{id}', [CommentController::class, 'delete'])->name('comments.delete');

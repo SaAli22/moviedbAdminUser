@@ -10,44 +10,18 @@ use Illuminate\Support\Str;
 
 class CommentController extends Controller
 {
-    private $predefinedComments = [
-        [
-            'id' => 1,
-            'body' => 'This movie was fantastic!',
-        ],
-        [
-            'id' => 2,
-            'body' => 'I loved the storyline.',
-        ],
-        // Add more predefined comments as needed
-    ];
 
-    public function index()
-    {
-        // Return predefined comments to the view
-        return view('comments.index', ['comments' => $this->predefinedComments]);
-    }
-
-    public function delete(Request $request, $id)
-    {
-        // Admin can delete a predefined comment by its ID
-        foreach ($this->predefinedComments as $key => $comment) {
-            if ($comment['id'] == $id) {
-                unset($this->predefinedComments[$key]);
-                break;
-            }
-        }
-        // Redirect back to the comments page
-        return redirect()->route('comments.index');
-    }
-    public function store(Request $request)
+    public function store(Request $req, String $movieId, String $body, String $userId)
     {
         $comment = new Comment();
 
         $comment->commentsId = Str::uuid();
-        $comment->userId = $request->userId;
-        $comment->body = $request->body;
-        $comment->movieId = $request->movieId;
+
+        $comment->userId = $userId;
+
+        $comment->body = $body;
+
+        $comment->movieId = $movieId;
 
         $comment->save();
     }

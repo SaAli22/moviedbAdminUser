@@ -8,92 +8,162 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/d826f0fb4b.js" crossorigin="anonymous"></script>
 </head>
-
+<?php if (session()->has('admin')): ?>
+<div id="admin-notification">
+    You're logged in as an admin.
+</div>
+<?php endif; ?>
 <body>
-    @include('search')
-    <div id="innerbody">
-        <div id="title-div">
-            <h1>Popular movies</h1>
-            <?php if (session()->has('user')) {
-                $temp = session('user');
-                echo $temp->name;
+@include('search')
+<div id="innerbody">
+    <div id="title-div">
+        <h1>Popular movies</h1>
+        <?php if (session()->has('user')) {
+            $temp = session('user');
+            echo $temp->name;
+        }
+        ?>
+    </div>
+    <div id="searchPoster"></div>
+    <div id="poster-div">
+        <button id="left-arrow" style="visibility: hidden"><i class="fa-solid fa-chevron-left"></i></button>
+        <?php
+        $data = session('data');
+        $poster = session('poster');
+        if (isset($data)) {
+            for ($i = 0; $i < 6; $i++) {
+                echo '<a class="redposter"><img class="redposterimg poster" src="https://image.tmdb.org/t/p/w500' . $data[$i]->poster_path . '"></a>';
             }
-            ?>
-        </div>
-        <div id="searchPoster"></div>
-        <div id="poster-div">
-            <button id="left-arrow" style="visibility: hidden"><i class="fa-solid fa-chevron-left"></i></button>
+        }
+        ?>
+        <button id="right-arrow"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <h1 id="watchlist-title">Your Watchlist</h1>
+    <div id="watchlist-div">
+
+    </div>
+
+</div>
+
+<?php if (session()->has('admin')): ?>
+<div id="admin-movies">
+    <h2>Hidden Movies</h2>
+
+    <div class="hidden-movie">
+
+
             <?php
             $data = session('data');
             $poster = session('poster');
             if (isset($data)) {
-                for ($i = 0; $i < 6; $i++) {
+                for ($i = 6; $i < 12; $i++) {
                     echo '<a class="redposter"><img class="redposterimg poster" src="https://image.tmdb.org/t/p/w500' . $data[$i]->poster_path . '"></a>';
                 }
             }
             ?>
-            <button id="right-arrow"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
-        <h1 id="watchlist-title">Your Watchlist</h1>
-        <div id="watchlist-div">
 
-        </div>
+
     </div>
-    <script>
-        let counter = 0;
-        let data = <?php echo json_encode($data); ?>;
 
-        let posterdiv = document.querySelectorAll('.redposterimg');
-        let rightarrow = document.querySelector('#right-arrow');
-        let leftarrow = document.querySelector('#left-arrow');
-        rightarrow.addEventListener('click', (event) => {
-            counter++;
-            posterdiv.forEach((element, i) => {
-                element.setAttribute('src', 'https://image.tmdb.org/t/p/w500' + data[i + counter]
-                    .poster_path);
-            })
-            if (counter > 4) rightarrow.style.visibility = "hidden";
-            else rightarrow.style.visibility = "visible";
-            if (counter > 0) leftarrow.style.visibility = "visible";
-            else leftarrow.style.visibility = "hidden";
-        })
+    <div id="admin-movies2">
+        <h2>New movies</h2>
+        <div class="hidden-movie1"></div>
+        <!-- Form for adding new movie -->
+        <form id="add-movie-form">
+            <input type="text" id="title" placeholder="Title" required>
+            <input type="file" id="poster_image" accept="image/*" required>
+            <button type="button" onclick="addMovie()">Add Movie</button>
+        </form>
+    </div>
 
-        leftarrow.addEventListener('click', (event) => {
-            counter--;
-            posterdiv.forEach((element, i) => {
-                element.setAttribute('src', 'https://image.tmdb.org/t/p/w500' + data[i + counter]
-                    .poster_path);
-            })
-            if (counter > 0) leftarrow.style.visibility = "visible";
-            else leftarrow.style.visibility = "hidden"
-            if (counter > 4) rightarrow.style.visibility = "hidden"
-            else rightarrow.style.visibility = "visible";
-        })
+</div>
+<?php endif; ?>
+<script>
 
-        async function getPosterPath(movie_id) {
-            return fetch(`/api/getPosterPath/${movie_id}`, {
-                method: "GET"
-            }).then(async (result) => {
-                return result.json();
-            })
+    function addMovie() {
+        var title = document.getElementById('title').value;
+        var imageFile = document.getElementById('poster_image').files[0];
+
+        if (title.trim() === '') {
+            alert('Please enter a title');
+            return;
+        }
+        if (!imageFile) {
+            alert('Please select an image');
+            return;
         }
 
-        async function getWatchlist(id) {
-            return fetch(`/api/getUserWatchlist/${id}`, {
-                method: "GET"
-            }).then(async (result) => {
-                return result.json();
-            })
-        }
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var imageUrl = event.target.result;
+
+            var movieElement = document.createElement('div');
+            movieElement.classList.add('redposter');
+            movieElement.innerHTML = '<p>' + title + '</p><img class="redposterimg poster" src="' + imageUrl + '" alt="' + title + '">';
 
 
-        getWatchlist(
-            @if (session()->has('user'))
-                {{ session('user')->id }}
+            var container = document.querySelector('.hidden-movie1');
+            container.appendChild(movieElement);
+        };
+        reader.readAsDataURL(imageFile);
+    }
+
+
+    let counter = 0;
+    let data = <?php echo json_encode($data); ?>;
+
+    let posterdiv = document.querySelectorAll('.redposterimg');
+
+    let rightarrow = document.querySelector('#right-arrow');
+    let leftarrow = document.querySelector('#left-arrow');
+    rightarrow.addEventListener('click', (event) => {
+        counter++;
+        posterdiv.forEach((element, i) => {
+            element.setAttribute('src', 'https://image.tmdb.org/t/p/w500' + data[i + counter]
+                .poster_path);
+        })
+        if (counter > 4) rightarrow.style.visibility = "hidden";
+        else rightarrow.style.visibility = "visible";
+        if (counter > 0) leftarrow.style.visibility = "visible";
+        else leftarrow.style.visibility = "hidden";
+    })
+
+    leftarrow.addEventListener('click', (event) => {
+        counter--;
+        posterdiv.forEach((element, i) => {
+            element.setAttribute('src', 'https://image.tmdb.org/t/p/w500' + data[i + counter]
+                .poster_path);
+        })
+        if (counter > 0) leftarrow.style.visibility = "visible";
+        else leftarrow.style.visibility = "hidden"
+        if (counter > 4) rightarrow.style.visibility = "hidden"
+        else rightarrow.style.visibility = "visible";
+    })
+
+    async function getPosterPath(movie_id) {
+        return fetch(`/api/getPosterPath/${movie_id}`, {
+            method: "GET"
+        }).then(async (result) => {
+            return result.json();
+        })
+    }
+
+    async function getWatchlist(id) {
+        return fetch(`/api/getUserWatchlist/${id}`, {
+            method: "GET"
+        }).then(async (result) => {
+            return result.json();
+        })
+    }
+
+
+    getWatchlist(
+        @if (session()->has('user'))
+            {{ session('user')->id }}
             @else
-                -1
-            @endif
-        ).then(async (response) => {
+        - 1
+        @endif
+    ).then(async (response) => {
             let div = document.querySelector('#watchlist-div');
             if (response.length == 0) {
                 let text = document.createElement('p');
@@ -124,27 +194,27 @@
             }
         })
 
-        document.querySelector("#form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const input = document.querySelector("#input").value;
-            $.ajax({
-                url: 'api/test/' + input,
-                type: "GET",
-                success: (result) => {
-                    document.querySelector('#searchPoster').innerHTML +=
-                        `<img class="poster" src="https://image.tmdb.org/t/p/w500${result}">`
-                }
-            })
-        });
-
-        var posters = document.querySelectorAll(".redposter");
-
-        posters.forEach((element, i) => {
-            element.addEventListener('click', (event) => {
-                window.location.href = '/movie/' + data[i + counter].id;
-            })
+    document.querySelector("#form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = document.querySelector("#input").value;
+        $.ajax({
+            url: 'api/test/' + input,
+            type: "GET",
+            success: (result) => {
+                document.querySelector('#searchPoster').innerHTML +=
+                    `<img class="poster" src="https://image.tmdb.org/t/p/w500${result}">`
+            }
         })
-    </script>
+    });
+
+    var posters = document.querySelectorAll(".redposter");
+
+    posters.forEach((element, i) => {
+        element.addEventListener('click', (event) => {
+            window.location.href = '/movie/' + data[i + counter].id;
+        })
+    })
+</script>
 </body>
 
 </html>
@@ -184,6 +254,18 @@
         margin: 0 1rem 0 1rem;
     }
 
+    #admin-movies {
+        background-color: #111;
+        margin: auto;
+        min-height: inherit;
+        height: inherit;
+        padding: 0 2rem 10rem 2rem;
+        max-width: 75%;
+        display: flex;
+        flex-direction: column;
+
+    }
+
     .redposter {
         background-color: #222;
     }
@@ -205,6 +287,7 @@
         place-self: center;
     }
 
+
     #left-arrow {
         display: flex;
         place-self: center;
@@ -215,6 +298,7 @@
         border: none;
         background: none;
     }
+
 
     .fa-solid {
         color: white;
