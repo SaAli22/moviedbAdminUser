@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <?php
-$user = null; // Define a default value for the $user variable
+$user = null;
 if (session()->has('user')) {
     $user = session('user');
 }
@@ -25,7 +25,7 @@ if (session()->has('user')) {
 <body>
 
 <?php
-// Check if admin session exists
+
 $isAdmin = false;
 if (session()->has('admin')) {
     $isAdmin = true;
@@ -65,17 +65,17 @@ if (session()->has('admin')) {
             <?php
             $posterPath = $data->poster_path;
             if ($isAdmin) {
-                // Display an edit button for the admin to change the image
+
                 echo '<button onclick="editImage()">Edit Image</button>';
 
 
             }
 
-            // Display the image with its current URL
+
             echo '<img id="moviePoster" src="https://image.tmdb.org/t/p/w500' . $posterPath . '"/>';
             ?>
             <?php
-// Check if admin or user session exists
+
             $isAdmin = session()->has('admin');
             $isUser = session()->has('user');
             ?>
@@ -117,14 +117,25 @@ if (session()->has('admin')) {
                     <button class="commentButton" type="submit">Submit</button>
                 </form>
             </div>
+            <div id="comments">
 
 
         </div>
     </div>
     <script>
+        console.log(<?php echo $user; ?>);
+        console.log("Hello");
+        let comments = document.querySelector("#comments");
+        let key = "<?php echo $key->results[0]->key; ?>";
+        var backdrop = document.querySelector('#backdrop');
+        backdrop.innerHTML += `<iframe src="https://www.youtube.com/embed/${key}?controls=0&autoplay=0&mute=1"></iframe>`;
+
+        let isAdded = false;
+        let button = document.querySelector('#watchlist-button');
+
         $(document).ready(function() {
             <?php if ($isAdmin): ?>
-            // Click event for the 'Edit Overview' button
+
             $('#editOverviewButton').on('click', function() {
                 var newOverviewText = prompt('Enter the new overview text:');
                 if (newOverviewText !== null && newOverviewText !== '') {
@@ -135,12 +146,12 @@ if (session()->has('admin')) {
         });
 
         function editImage() {
-            // Prompt the admin to input a new image URL or upload a new image
 
-            // Example: Prompt input for a new image URL
+
+
             let newURL = prompt('Enter new image URL:');
             if (newURL) {
-                // If a new URL is provided, update the image source (src)
+
                 document.getElementById('moviePoster').src = newURL;
             }
         }
@@ -160,16 +171,6 @@ if (session()->has('admin')) {
 
 
 
-    console.log(<?php echo $user; ?>);
-    console.log("Hello");
-    let comments = document.querySelector("#comments");
-    let key = "<?php echo $key->results[0]->key; ?>";
-    var backdrop = document.querySelector('#backdrop');
-    backdrop.innerHTML += `<iframe src="https://www.youtube.com/embed/${key}?controls=0&autoplay=0&mute=1"></iframe>`;
-
-    let isAdded = false;
-    let button = document.querySelector('#watchlist-button');
-
 
 
 
@@ -178,14 +179,14 @@ if (session()->has('admin')) {
         url: `/api/getWatchlist/{{ $user->id }}/${window.location.pathname.substr(7)}`,
         method: 'GET',
     }).done((res) => {
-        //if current movie is watchlisted by current user
+
         if (res.length > 0) {
             button.style = 'background-color: grey';
             button.innerHTML =
                 '<i class="fa-solid fa-check plus"></i> Remove from watchlist';
             isAdded = true;
         }
-        //if current movie is not watchlisted by current user
+
         else {
             button.style = 'background-color: yellow';
             button.innerHTML =
@@ -193,7 +194,7 @@ if (session()->has('admin')) {
             isAdded = false;
         }
     })
-    //if not logged in
+
     @else
     document.querySelector('#watchlist-button').style.visibility = 'hidden';
     @endif
@@ -285,25 +286,31 @@ if (session()->has('admin')) {
     }
 
 
-    }
+        function refreshComments() {
+            $.ajax({
+                url: `/api/getmovie/${window.location.pathname.substr(7)}`,
+                type: "GET",
+                success: async (result) => {
+                    comments.innerHTML = ""
+                    for (let i = 0; i < result.length; i++) {
+                        let name = await getUsername(result[i].userId);
+                        comments.innerHTML +=
+                            `<div class="commentsUser"><span>${name}</span>${new Date(result[i].created_at).toString().substr(4, 20)}</div><div class="comments"><p class="commentsBody"> ${result[i].body} </p><button onclick="deleteComment('${result[i].commentsId}', ${result[i].userId})" id="commentsDelete"> X</button> </div>`
+                    }
 
-    // Array of comments
-    let commentsArray = [
-        "This is comment 1",
-        "This is comment 2",
-        "This is comment 3",
-        // Add more comments as needed
-    ];
+                }
+            })
+        }
 
-    // Get the element to display comments
-    let commentsList = document.getElementById("displayComments");
+        document.querySelector("#commentForm").addEventListener('submit', (event) => {
+            event.preventDefault();
+            const input = document.querySelector("#commentInput").value;
 
-    // Loop through commentsArray and create list items for each comment
-    commentsArray.forEach(comment => {
-        let listItem = document.createElement("li");
-        listItem.textContent = comment;
-        commentsList.appendChild(listItem);
-    });
+            postComment(window.location.pathname.substr(7), input)
+            refreshComments()
+        })
+
+        refreshComments();}
 
 
 </script>
